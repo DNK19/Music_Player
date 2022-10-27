@@ -1,6 +1,7 @@
 :root {
     --primary-color: #ec1f55;
     --text-color: #333;
+    --border-radius: 50px;
   }
   
   * {
@@ -76,7 +77,6 @@
     background-color: #333;
     background-size: cover;
     margin: auto;
-    background-image: url(./img/sontung-1.jpg);
     /* animation: spin 5s linear infinite; */
   }
   
@@ -113,21 +113,23 @@
   .progress {
     width: 100%;
     -webkit-appearance: none;
-    height: 6px;
+    height: 10px;
     background: #d3d3d3;
     outline: none;
     opacity: 0.7;
     -webkit-transition: 0.2s;
     transition: opacity 0.2s;
+    border-radius: var(--border-radius);
   }
   
   .progress::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 12px;
-    height: 6px;
+    height: 10px;
     background-color: var(--primary-color);
     cursor: pointer;
+    border-radius: var(--border-radius);
   }
   
   /* PLAYLIST */
@@ -151,7 +153,7 @@
   }
   
   .song:active {
-    opacity: 0.8;
+    opacity: 0.6;
   }
   
   .song.active .option,
