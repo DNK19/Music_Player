@@ -45,6 +45,8 @@
     width: 100%;
     max-width: 480px;
     border-bottom: 1px solid #ebebeb;
+    background-image: url('/assets/backgroundimg/bichngoc.jpg');
+    background-size: 100%;
   }
   
   /* HEADER */
@@ -92,6 +94,12 @@
     color: #666;
     padding: 18px;
     font-size: 18px;
+  }
+
+  .control .btn:hover {
+    background-color: var(--primary-color);
+    border-radius: 50px;
+    color: #fff;
   }
   
   .control .btn.active {

@@ -1,6 +1,8 @@
 const $ = document.querySelector.bind(document);
 const $$ = document.querySelectorAll.bind(document);
 
+const PLAYER_STORAGE_KEY = "F8_PLAYER";
+
 const player = $(".player");
 const heading = $("header h2");
 const cdThumb = $(".cd-thumb");
@@ -12,13 +14,14 @@ const nextBtn = $(".btn-next");
 const prevBtn = $(".btn-prev");
 const randomBtn = $(".btn-random");
 const repeatBtn = $(".btn-repeat");
-const playlist = $('.playlist');
+const playlist = $(".playlist");
 
 const app = {
   currentIndex: 0,
   isPlaying: false,
   isRandom: false,
   isRepeat: false,
+  config: JSON.parse(localStorage.getItem(PLAYER_STORAGE_KEY)) || {},
   songs: [
     {
       name: "Waiting for you",
@@ -87,10 +90,16 @@ const app = {
       img: "../assets/img/sontung-1.jpg",
     },
   ],
+  setConfig: function (key, value) {
+    this.config[key] = value;
+    localStorage.setItem(PLAYER_STORAGE_KEY, JSON.stringify(this.config));
+  },
   render: function () {
     const htmls = this.songs.map((song, index) => {
       return `
-                <div class="song ${index === this.currentIndex ? 'active' : ''}">
+                <div class="song ${
+                  index === this.currentIndex ? "active" : ""
+                }" data-index = "${index}">
                     <div class="thumb" 
                         style="background-image: url('${song.img}')">
                     </div>
@@ -202,20 +211,21 @@ const app = {
       audio.play();
       _this.render();
       _this.scrollToActiveSong();
-
     };
 
     //random bài hát xử lý bật tắt
     randomBtn.onclick = function (e) {
       _this.isRandom = !_this.isRandom;
+      _this.setConfig("isRandom", _this.isRandom);
       randomBtn.classList.toggle("active", _this.isRandom);
     };
 
     //Xử lý lặp bài hát
     repeatBtn.onclick = function (e) {
       _this.isRepeat = !_this.isRepeat;
+      _this.setConfig("isRepeat", _this.isRepeat);
       repeatBtn.classList.toggle("active", _this.isRepeat);
-    }
+    };
 
     //Xử lý random hết mảng từng bài xong clear bắt đầu lại mảng mới
     //đưa hết các bài đã random vào mảng và kiểm tra nếu đã lặp qua
@@ -231,22 +241,42 @@ const app = {
     };
 
     //Lắng nghe click vào playlist
-    playlist.onclick = function(e){
-      
-    }
+    playlist.onclick = function (e) {
+      const songNode = e.target.closest(".song:not(.active)");
+      const optionNode = e.target.closest(".option");
+
+      if (songNode || optionNode) {
+        //Xử lý click vào song
+        if (songNode) {
+          _this.currentIndex = Number(songNode.dataset.index);
+          //dataset.index convert thành chuỗi
+          _this.loadCurrentSong();
+          audio.play();
+          _this.render();
+        }
+
+        //Xử lý khi click vào option
+        if (optionNode) {
+        }
+      }
+    };
   },
-  scrollToActiveSong: function(){
+  scrollToActiveSong: function () {
     setTimeout(() => {
-      $('.song.active').scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      })
-    },200)
+      $(".song.active").scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }, 200);
   },
   loadCurrentSong: function () {
     heading.textContent = this.currentSong.name;
     cdThumb.style.backgroundImage = `url('${this.currentSong.img}')`;
     audio.src = this.currentSong.path;
+  },
+  loadConfig: function () {
+    this.isRandom = this.config.isRandom;
+    this.isRepeat = this.config.isRepeat;
   },
   nextSong: function () {
     this.currentIndex++;
@@ -271,6 +301,9 @@ const app = {
     this.loadCurrentSong();
   },
   start: function () {
+    //Gán cáu hình từ config vào object app
+    this.loadConfig();
+
     //Định nghĩa các thuộc tính object
     this.defineProperties();
 
@@ -282,6 +315,10 @@ const app = {
 
     //Render playlist
     this.render();
+
+    //Hiển thị trạng thái ban đầu của button repeat và random
+    repeatBtn.classList.toggle("active", _this.isRepeat);
+    randomBtn.classList.toggle("active", _this.isRandom);
   },
 };
 app.start();
