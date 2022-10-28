@@ -162,6 +162,7 @@
   
   .song:active {
     opacity: 0.6;
+    box-shadow: none;
   }
   
   .song.active .option,
