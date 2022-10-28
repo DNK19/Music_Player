@@ -45,7 +45,7 @@
     width: 100%;
     max-width: 480px;
     border-bottom: 1px solid #ebebeb;
-    background-image: url('/assets/backgroundimg/bichngoc.jpg');
+    background-image: url('./assets/backgroundimg/bichngoc.jpg');
     background-size: 100%;
   }
   
